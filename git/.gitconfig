@@ -1,0 +1,20 @@
+[user]
+	name = Ellery Familia
+	email = ellery@familia.me
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[core]
+	editor = vim

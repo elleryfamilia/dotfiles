@@ -17,7 +17,7 @@ if [ "$OS" = "Darwin" ]; then
         echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         exit 1
     fi
-    brew bundle --file="$DOTFILES/Brewfile"
+    brew bundle --file="$DOTFILES/Brewfile" || echo "Warning: some Brewfile packages failed to install/upgrade"
 
 elif [ "$OS" = "Linux" ]; then
     echo ""
@@ -26,21 +26,40 @@ elif [ "$OS" = "Linux" ]; then
     sudo apt install -y $(cat "$DOTFILES/packages-apt.txt")
 fi
 
+# --- Oh My Zsh ---
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo ""
+    echo "==> Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# --- Oh My Posh (Linux only; Homebrew handles macOS) ---
+
+if [ "$OS" = "Linux" ] && ! command -v oh-my-posh &>/dev/null; then
+    echo ""
+    echo "==> Installing Oh My Posh..."
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
+    mkdir -p ~/.cache/oh-my-posh/themes
+    curl -sL "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/dracula.omp.json" \
+        -o ~/.cache/oh-my-posh/themes/dracula.omp.json
+fi
+
 # --- Cross-platform tools ---
 
 echo ""
 echo "==> Installing cross-platform tools..."
 
-# Starship (if not already installed)
-if ! command -v starship &>/dev/null; then
-    echo "Installing starship..."
-    curl -sS https://starship.rs/install.sh | sh -s -- -y -b ~/.local/bin
-fi
-
-# NVM (if not already installed)
-if [ ! -d "$HOME/.nvm" ]; then
+# NVM + Node
+export NVM_DIR="$HOME/.nvm"
+if [ ! -d "$NVM_DIR" ]; then
     echo "Installing nvm..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+fi
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+if ! nvm ls --no-colors 2>/dev/null | grep -q "lts"; then
+    echo "Installing Node LTS via nvm..."
+    nvm install --lts
 fi
 
 # Rustup (if not already installed)
@@ -49,23 +68,16 @@ if ! command -v rustup &>/dev/null; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
 
-# Cargo tools
-if command -v cargo &>/dev/null; then
-    echo "Installing cargo tools..."
-    cargo install cross --locked 2>/dev/null || true
+# Thicc editor (if not already installed)
+if ! command -v thicc &>/dev/null; then
+    echo "Installing thicc..."
+    curl -fsSL https://raw.githubusercontent.com/elleryfamilia/thicc/main/install.sh | sh
 fi
 
-# Go tools
-if command -v go &>/dev/null; then
-    echo "Installing go tools..."
-    go install github.com/jesseduffield/lazygit@latest 2>/dev/null || true
-    [ -f ~/go/bin/lazygit ] && mkdir -p ~/.local/bin && ln -sf ~/go/bin/lazygit ~/.local/bin/lazygit
-fi
-
-# NPM global tools
-if command -v npm &>/dev/null; then
-    echo "Installing npm global tools..."
-    npm install -g turbo 2>/dev/null || true
+# bat symlink (Ubuntu installs as batcat)
+if [ "$OS" = "Linux" ] && command -v batcat &>/dev/null; then
+    mkdir -p ~/.local/bin
+    ln -sf /usr/bin/batcat ~/.local/bin/bat
 fi
 
 # --- Symlinks ---
@@ -73,16 +85,31 @@ fi
 echo ""
 echo "==> Creating symlinks..."
 
-mkdir -p ~/.config
+mkdir -p ~/.config/gh ~/.config/git ~/.config/zed
 
+# Shell
 ln -sf "$DOTFILES/shell/.zshrc" ~/.zshrc
-ln -sf "$DOTFILES/git/.gitconfig" ~/.gitconfig
-ln -sf "$DOTFILES/starship/starship.toml" ~/.config/starship.toml
+ln -sf "$DOTFILES/shell/.zprofile" ~/.zprofile
+ln -sf "$DOTFILES/shell/.zshenv" ~/.zshenv
 
-# bat symlink (Ubuntu installs as batcat)
-if [ "$OS" = "Linux" ] && command -v batcat &>/dev/null; then
-    mkdir -p ~/.local/bin
-    ln -sf /usr/bin/batcat ~/.local/bin/bat
+# Git
+ln -sf "$DOTFILES/git/.gitconfig" ~/.gitconfig
+ln -sf "$DOTFILES/git/ignore" ~/.config/git/ignore
+
+# GitHub CLI
+ln -sf "$DOTFILES/gh/config.yml" ~/.config/gh/config.yml
+
+# Zed
+ln -sf "$DOTFILES/zed/settings.json" ~/.config/zed/settings.json
+
+# --- macOS defaults ---
+
+if [ "$OS" = "Darwin" ]; then
+    echo ""
+    read -p "Apply macOS system defaults? [y/N] " apply_defaults
+    if [ "$apply_defaults" = "y" ] || [ "$apply_defaults" = "Y" ]; then
+        bash "$DOTFILES/macos/defaults.sh"
+    fi
 fi
 
 # --- Shell ---

@@ -1,66 +1,55 @@
-# Starship prompt
-eval "$(starship init zsh)"
+# Oh My Posh prompt
+if [ "$(uname)" = "Darwin" ]; then
+    eval "$(oh-my-posh init zsh --config $(brew --prefix oh-my-posh)/themes/dracula.omp.json)"
+else
+    eval "$(oh-my-posh init zsh --config ${POSH_THEMES_PATH:-$HOME/.cache/oh-my-posh/themes}/dracula.omp.json)"
+fi
 
-setopt histignorealldups sharehistory
+# Oh My Zsh
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME=""
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
 
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
+# macOS-specific PATH
+if [ "$(uname)" = "Darwin" ]; then
+    export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+    export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+fi
 
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
+# Editor
+export EDITOR=thicc
 
-# Use modern completion system
-autoload -Uz compinit
-compinit
-
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-
-# PATH additions
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-
-# Aliases
-alias clauded='claude --dangerously-skip-permissions'
+# Modern CLI replacements
 alias ls='eza'
 alias ll='eza -la --git'
 alias tree='eza --tree'
 alias cat='bat --paging=never'
 
+# Claude
+_c() { claude --print "$*"; }
+alias c='noglob _c'
+alias clauded='claude --dangerously-skip-permissions'
+
+# Task Master
+alias tm='task-master'
+alias taskmaster='task-master'
+
+# Zellij
+alias qubo='zellij attach qubo || zellij --session qubo --layout qubo'
+
 # Zoxide (smarter cd)
-eval "$(zoxide init zsh --cmd cd)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
 
-# Plugins (apt-installed locations on Linux, Homebrew locations on macOS)
-if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ -f "$(brew --prefix 2>/dev/null)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# Plugins (Linux only; brew-installed plugins are sourced via Oh My Zsh on macOS)
+if [ "$(uname)" = "Linux" ]; then
+    [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && \
+        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && \
+        source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -f "$(brew --prefix 2>/dev/null)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# Custom prompt for THOCK terminal
+if [[ -n "$THOCK_TERM" ]]; then
+    PROMPT='%F{205}> %F{51}%1~%F{141}$(git branch --show-current 2>/dev/null | sed "s/^/ @ /")%f %F{205}>>%f '
 fi
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"

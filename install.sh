@@ -20,10 +20,18 @@ if [ "$OS" = "Darwin" ]; then
     brew bundle --file="$DOTFILES/Brewfile" || echo "Warning: some Brewfile packages failed to install/upgrade"
 
 elif [ "$OS" = "Linux" ]; then
-    echo ""
-    echo "==> Installing apt packages..."
-    sudo apt update
-    sudo apt install -y $(cat "$DOTFILES/packages-apt.txt")
+    if command -v pacman &>/dev/null; then
+        echo ""
+        echo "==> Installing pacman packages..."
+        sudo pacman -S --needed --noconfirm $(cat "$DOTFILES/packages-pacman.txt")
+    elif command -v apt &>/dev/null; then
+        echo ""
+        echo "==> Installing apt packages..."
+        sudo apt update
+        sudo apt install -y $(cat "$DOTFILES/packages-apt.txt")
+    else
+        echo "Warning: no supported package manager found (apt or pacman)"
+    fi
 fi
 
 # --- Oh My Zsh ---

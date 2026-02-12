@@ -12,7 +12,7 @@ Personal dotfiles for macOS and Linux. One script to install everything.
 | **Languages** | Node (via NVM), Rust (via rustup), Go, Python (via pyenv) |
 | **Git** | git, gh CLI, git-crypt |
 | **macOS** | Homebrew packages, casks, Nerd Fonts, system defaults |
-| **Linux** | apt packages, Oh My Posh via curl |
+| **Linux** | apt (Debian/Ubuntu) or pacman (Arch), Oh My Posh via curl |
 
 ## Install
 
@@ -22,11 +22,11 @@ cd ~/.dotfiles
 ./install.sh
 ```
 
-**Prerequisites:** Homebrew (macOS) or apt (Linux). The script handles the rest.
+**Prerequisites:** Homebrew (macOS), apt (Debian/Ubuntu), or pacman (Arch). The script handles the rest.
 
 ## What the install script does
 
-1. Installs packages via Homebrew (`Brewfile`) or apt (`packages-apt.txt`)
+1. Installs packages via Homebrew (`Brewfile`), apt (`packages-apt.txt`), or pacman (`packages-pacman.txt`)
 2. Installs Oh My Zsh and Oh My Posh
 3. Installs NVM + Node LTS, Rustup, and Thicc
 4. Symlinks all config files to their expected locations
@@ -38,7 +38,8 @@ cd ~/.dotfiles
 ```
 dotfiles/
 ├── Brewfile            # macOS Homebrew packages, casks, and fonts
-├── packages-apt.txt    # Linux apt packages
+├── packages-apt.txt    # Debian/Ubuntu apt packages
+├── packages-pacman.txt # Arch pacman packages
 ├── install.sh          # Cross-platform install script
 ├── shell/
 │   ├── .zshrc          # Shell config (aliases, prompt, plugins)

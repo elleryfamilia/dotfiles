@@ -2,6 +2,7 @@
 tap "browsh-org/browsh"
 tap "charmbracelet/tap"
 tap "danielgatis/imgcat"
+tap "elleryfamilia/zerminal"
 tap "fw-ai/firectl"
 tap "jandedobbeleer/oh-my-posh"
 tap "jesseduffield/lazygit"
@@ -97,6 +98,7 @@ cask "ungoogled-chromium"
 cask "visual-studio-code"
 cask "wave"
 cask "wezterm"
+cask "elleryfamilia/zerminal/zerminal"
 
 # Casks - Fonts
 cask "font-fira-code"

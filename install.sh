@@ -82,6 +82,12 @@ if ! command -v thicc &>/dev/null; then
     curl -fsSL https://raw.githubusercontent.com/elleryfamilia/thicc/main/install.sh | sh
 fi
 
+# Zerminal (Linux; macOS handled by Brewfile cask)
+if [ "$OS" = "Linux" ] && ! command -v zerminal &>/dev/null; then
+    echo "Installing zerminal..."
+    curl -fsSL https://github.com/elleryfamilia/zerminal/releases/latest/download/install.sh | sh
+fi
+
 # bat symlink (Ubuntu installs as batcat)
 if [ "$OS" = "Linux" ] && command -v batcat &>/dev/null; then
     mkdir -p ~/.local/bin

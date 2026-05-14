@@ -7,7 +7,7 @@ Personal dotfiles for macOS and Linux. One script to install everything.
 | Category | Tools |
 |---|---|
 | **Shell** | zsh + Oh My Zsh + Oh My Posh (Dracula theme) |
-| **Editor** | [Thicc](https://github.com/elleryfamilia/thicc) |
+| **Editor** | [Thicc](https://github.com/elleryfamilia/thicc), [Zerminal](https://github.com/elleryfamilia/zerminal) |
 | **Terminal tools** | eza, bat, fd, ripgrep, fzf, zoxide, zellij, yazi, lazygit, btop |
 | **Languages** | Node (via NVM), Rust (via rustup), Go, Python (via pyenv) |
 | **Git** | git, gh CLI, git-crypt |
@@ -28,7 +28,7 @@ cd ~/.dotfiles
 
 1. Installs packages via Homebrew (`Brewfile`), apt (`packages-apt.txt`), or pacman (`packages-pacman.txt`)
 2. Installs Oh My Zsh and Oh My Posh
-3. Installs NVM + Node LTS, Rustup, and Thicc
+3. Installs NVM + Node LTS, Rustup, Thicc, and Zerminal
 4. Symlinks all config files to their expected locations
 5. Optionally applies macOS system defaults (dark mode, dock, Finder, etc.)
 6. Sets zsh as the default shell

@@ -38,18 +38,24 @@ alias taskmaster='task-master'
 # Zellij
 alias qubo='zellij attach qubo || zellij --session qubo --layout qubo'
 
-# Zoxide (smarter cd)
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
-
 # Plugins (Linux only; brew-installed plugins are sourced via Oh My Zsh on macOS)
+# Debian/Ubuntu install these under /usr/share/<plugin>/, Arch under
+# /usr/share/zsh/plugins/<plugin>/.
 if [ "$(uname)" = "Linux" ]; then
-    [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && \
-        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && \
-        source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+        for dir in /usr/share/$plugin /usr/share/zsh/plugins/$plugin; do
+            if [ -f "$dir/$plugin.zsh" ]; then
+                source "$dir/$plugin.zsh"
+                break
+            fi
+        done
+    done
 fi
 
 # Custom prompt for THOCK terminal
 if [[ -n "$THOCK_TERM" ]]; then
     PROMPT='%F{205}> %F{51}%1~%F{141}$(git branch --show-current 2>/dev/null | sed "s/^/ @ /")%f %F{205}>>%f '
 fi
+
+# Zoxide (smarter cd) — keep last so its prompt hooks aren't clobbered
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"

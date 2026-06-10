@@ -13,6 +13,7 @@ Personal dotfiles for macOS and Linux. One script to install everything.
 | **Git** | git, gh CLI, git-crypt |
 | **macOS** | Homebrew packages, casks, Nerd Fonts, system defaults |
 | **Linux** | apt (Debian/Ubuntu) or pacman (Arch), Oh My Posh via curl |
+| **Linux desktop** | COSMIC theme-toggle panel button, battery %, AC/battery power-profile switching |
 
 ## Install
 
@@ -30,8 +31,11 @@ cd ~/.dotfiles
 2. Installs Oh My Zsh and Oh My Posh
 3. Installs NVM + Node LTS, Rustup, Thicc, and Zerminal
 4. Symlinks all config files to their expected locations
-5. Optionally applies macOS system defaults (dark mode, dock, Finder, etc.)
-6. Sets zsh as the default shell
+5. On Linux, runs `linux/setup.sh` — each piece self-gates on its dependencies, so it's a no-op on systems without them:
+   - **COSMIC only:** panel light/dark theme-toggle button, battery percentage in the panel, icon-style panel buttons
+   - **power-profiles-daemon only:** udev rule switching to `performance` on AC and `balanced` on battery (needs sudo)
+6. Optionally applies macOS system defaults (dark mode, dock, Finder, etc.)
+7. Sets zsh as the default shell
 
 ## Repo structure
 
@@ -52,6 +56,10 @@ dotfiles/
 │   └── config.yml      # GitHub CLI config
 ├── zed/
 │   └── settings.json   # Zed editor theme
+├── linux/
+│   ├── setup.sh        # Linux desktop extras (self-gating per tool)
+│   ├── cosmic/         # COSMIC theme-toggle button + desktop entries
+│   └── udev/           # AC/battery power-profile switching rule
 └── macos/
     └── defaults.sh     # macOS system preferences
 ```

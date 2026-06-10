@@ -116,6 +116,13 @@ ln -sf "$DOTFILES/gh/config.yml" ~/.config/gh/config.yml
 # Zed
 ln -sf "$DOTFILES/zed/settings.json" ~/.config/zed/settings.json
 
+# --- Linux desktop extras (each piece gates on its own dependencies) ---
+
+if [ "$OS" = "Linux" ]; then
+    echo ""
+    bash "$DOTFILES/linux/setup.sh"
+fi
+
 # --- macOS defaults ---
 
 if [ "$OS" = "Darwin" ]; then

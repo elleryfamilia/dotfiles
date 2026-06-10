@@ -1,0 +1,22 @@
+#!/bin/sh
+# Toggle COSMIC between light and dark mode by flipping the theme-mode flag,
+# then update the panel button to show the mode the next click switches to
+# (sun while dark, moon while light).
+mode="$HOME/.config/cosmic/com.system76.CosmicTheme.Mode/v1/is_dark"
+entry="$HOME/.local/share/applications/io.ellery.CosmicThemeToggle.desktop"
+wings="$HOME/.config/cosmic/com.system76.CosmicPanel.Panel/v1/plugins_wings"
+
+if [ "$(cat "$mode" 2>/dev/null)" = "true" ]; then
+    printf 'false' > "$mode"
+    icon=weather-clear-night-symbolic   # now light; next click goes dark
+else
+    printf 'true' > "$mode"
+    icon=weather-clear-symbolic         # now dark; next click goes light
+fi
+
+sed -i "s/^Icon=.*/Icon=$icon/" "$entry"
+
+# cosmic-panel-button reads the entry only at startup. Rewriting the plugins
+# list makes the panel restart its applets, ours included. Must be an
+# in-place write: the panel's watcher follows the inode, so mv breaks it.
+cp "$wings" "$wings.tmp" && cat "$wings.tmp" > "$wings" && rm "$wings.tmp"

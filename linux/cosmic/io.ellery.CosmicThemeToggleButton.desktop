@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Theme Toggle Button
+Comment=Panel button that switches between light and dark mode
+Type=Application
+Exec=cosmic-panel-button io.ellery.CosmicThemeToggle
+Terminal=false
+Icon=weather-clear-night-symbolic
+Categories=COSMIC;
+Keywords=COSMIC;Applet;Theme;Dark;Light;
+NoDisplay=true
+StartupNotify=false
+X-CosmicApplet=true

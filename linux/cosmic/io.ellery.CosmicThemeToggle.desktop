@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Toggle Light/Dark Mode
+Comment=Switch COSMIC between light and dark themes
+Type=Application
+Exec=cosmic-toggle-theme
+Terminal=false
+Icon=weather-clear-night-symbolic
+Categories=COSMIC;Utility;
+Keywords=theme;dark;light;mode;toggle;
+NoDisplay=true
+StartupNotify=false

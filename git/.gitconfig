@@ -1,6 +1,6 @@
 [user]
 	name = Ellery Familia
-	email = ellery@familia.me
+	email = 55049+elleryfamilia@users.noreply.github.com
 
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
@@ -24,3 +24,9 @@
 
 [diff]
 	colormoved = default
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

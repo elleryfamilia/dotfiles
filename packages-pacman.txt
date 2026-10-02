@@ -25,7 +25,6 @@ screen
 tmux
 unzip
 wget
-zoxide
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting

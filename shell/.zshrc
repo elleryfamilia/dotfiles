@@ -1,3 +1,7 @@
+# NVM (also here since most terminals open non-login shells)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Oh My Posh prompt
 if [ "$(uname)" = "Darwin" ]; then
     eval "$(oh-my-posh init zsh --config $(brew --prefix oh-my-posh)/themes/dracula.omp.json)"
@@ -38,9 +42,6 @@ alias taskmaster='task-master'
 # Zellij
 alias qubo='zellij attach qubo || zellij --session qubo --layout qubo'
 
-# Zoxide (smarter cd)
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh --cmd cd)"
-
 # Plugins (Linux only; brew-installed plugins are sourced via Oh My Zsh on macOS)
 if [ "$(uname)" = "Linux" ]; then
     [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && \
@@ -53,3 +54,8 @@ fi
 if [[ -n "$THOCK_TERM" ]]; then
     PROMPT='%F{205}> %F{51}%1~%F{141}$(git branch --show-current 2>/dev/null | sed "s/^/ @ /")%f %F{205}>>%f '
 fi
+
+# bun
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
